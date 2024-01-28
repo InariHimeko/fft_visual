@@ -1,0 +1,5 @@
+Flask==3.0.1
+Flask-Cors==4.0.0
+numpy==1.26.1
+scipy==1.11.3
+sympy==1.12
