@@ -1,7 +1,8 @@
+# This file is part of fft_visual and is released under the GPL-3.0 License. See LICENSE or https://www.gnu.org/licenses/gpl-3.0.html.
 # Author: Wenxuan Xu
 # Date: 2024-01-27
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from sympy import symbols, diff, sympify, SympifyError
 from sympy.utilities.lambdify import lambdify
 from flask_cors import CORS
@@ -10,6 +11,10 @@ from scipy.fft import fft, ifft
 
 app = Flask(__name__)
 CORS(app)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 def calculate_true_derivative(func, x, domain_range, step_size):
     derivative = diff(func, x)

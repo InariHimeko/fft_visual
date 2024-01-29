@@ -1,3 +1,5 @@
+// # This file is part of fft_visual and is released under the GPL-3.0 License. See LICENSE or https://www.gnu.org/licenses/gpl-3.0.html.
+
 function performCalculation() {
     const functionInput = document.getElementById('functionInput').value;
     const domainStart = parseFloat(document.getElementById('domainStart').value);
