@@ -23,8 +23,8 @@ def calculate_true_derivative(func, x, domain_range, step_size):
     y_vals = numerical_derivative(x_vals)
     return x_vals.tolist(), y_vals.tolist()
 
-def calculate_fft_derivative(func, x, domain_range, step_size):
-    num_points = int((domain_range[1] - domain_range[0]) / step_size) + 1
+def calculate_fft_derivative(func, x, domain_range, truncation_size):
+    num_points = truncation_size
     x_vals_fft = np.linspace(domain_range[0], domain_range[1], num_points)
     y_vals = lambdify(x, func, 'numpy')(x_vals_fft)
 
@@ -53,6 +53,7 @@ def calculate():
         func_str = data['function']
         domain_range = data.get('domain_range', [-15, 15])
         step_size = data.get('step_size', 0.1)
+        truncation_size = data.get('truncation_size', 400)
         x = symbols('x')
         
         # Safely parse the function string
@@ -60,7 +61,7 @@ def calculate():
 
         # Calculate both derivatives
         x_vals_true, true_derivative = calculate_true_derivative(func, x, domain_range, step_size)
-        x_vals_fft, fft_derivative = calculate_fft_derivative(func, x, domain_range, step_size)
+        x_vals_fft, fft_derivative = calculate_fft_derivative(func, x, domain_range, truncation_size)
         x_vals_cd, cd_derivative = calculate_central_difference_derivative(func, x, domain_range, step_size)
 
         response_data = {

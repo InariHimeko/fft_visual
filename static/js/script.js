@@ -5,6 +5,7 @@ function performCalculation() {
     const domainStart = parseFloat(document.getElementById('domainStart').value);
     const domainEnd = parseFloat(document.getElementById('domainEnd').value);
     const stepSize = parseFloat(document.getElementById('stepSize').value);
+    const truncationSize = parseInt(document.getElementById('truncationSize').value);
 
     // Basic validation
     if (!functionInput.trim() || isNaN(domainStart) || isNaN(domainEnd) || isNaN(stepSize)) {
@@ -20,7 +21,8 @@ function performCalculation() {
         body: JSON.stringify({ 
             function: functionInput,
             domain_range: [domainStart, domainEnd],
-            step_size: stepSize
+            step_size: stepSize,
+            truncation_size: truncationSize
         })
     })
     .then(response => {
