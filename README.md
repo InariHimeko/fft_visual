@@ -34,13 +34,13 @@ This web application, built with Flask, provides an interactive platform to visu
 4. **Running the Application**
    - **Start the Flask Application**:
      ```bash
-     python app.py
+     python3 app.py
    - **Access the Application**:
      Open a web browser and navigate to [http://127.0.0.1:5000] or [http://localhost:5000].
 
 ## Using the Website
 1. **Enter a Function**: Input a mathematical function in the provided field (e.g., `sin(x)`, `cos(x) * exp(-x**2)`).
-2. **Specify Domain Range and Step Size**: Input the start and end values for the domain and specify the step size for the calculations.
+2. **Specify Domain Range and Step/Truncation Size**: Input the start and end values for the domain and specify the step and truncation size for the calculations.
 3. **View the Graphs**: After submitting your input, the application will display three plots:
    - The true derivative of the function.
    - The FFT approximated derivative.
