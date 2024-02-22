@@ -7,6 +7,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FFT Numerical Differentiation Visualization</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        .input-description {
+            color: grey;
+            display: block;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+        .input-description {
+        color: grey;
+        display: block;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        }
+        #functionInput {
+            width: 100%;
+            max-width: 200px;
+        }
+    </style>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
@@ -16,23 +34,28 @@
         <div>
             <label for="functionInput">Enter Function:</label>
             <input type="text" id="functionInput" placeholder="e.g., cos(x) * exp(-x**2 / 25)">
+            <small class="input-description">Input the mathematical function you wish to differentiate.</small>
         </div>
         <div>
             <label for="domainStart">Domain Start:</label>
             <input type="number" id="domainStart" placeholder="-15">
+            <small class="input-description">Specify the starting point of the domain for your function.</small>
         </div>
         <div>
             <label for="domainEnd">Domain End:</label>
             <input type="number" id="domainEnd" placeholder="15">
+            <small class="input-description">Specify the ending point of the domain for your function.</small>
         </div>
 
         <div>
             <label for="stepSize">Step Size:</label>
             <input type="number" id="stepSize" placeholder="0.1" step="any">
+            <small class="input-description">The step size determines the distance between points in your domain. Smaller values result in a finer resolution and more data points.</small>
         </div>
         <div>
             <label for="truncationSize">Truncation Size:</label>
-            <input type="number" id="truncationSize" placeholder="400">
+            <input type="number" id="truncationSize" placeholder="20">
+            <small class="input-description">Truncation size limits the number of frequency components used in the FFT. Reducing this value can help remove high-frequency noise but may also smooth out significant details.</small>
         </div>
 
         <button onclick="performCalculation()">Calculate</button>
