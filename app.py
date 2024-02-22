@@ -7,7 +7,7 @@ from sympy import symbols, diff, sympify, SympifyError
 from sympy.utilities.lambdify import lambdify
 from flask_cors import CORS
 import numpy as np
-from scipy.fft import fft, ifft
+from scipy.fft import fft, ifft, fftfreq
 
 app = Flask(__name__)
 CORS(app)
@@ -23,19 +23,29 @@ def calculate_true_derivative(func, x, domain_range, step_size):
     y_vals = numerical_derivative(x_vals)
     return x_vals.tolist(), y_vals.tolist()
 
-def calculate_fft_derivative(func, x, domain_range, truncation_size):
-    num_points = truncation_size
-    x_vals_fft = np.linspace(domain_range[0], domain_range[1], num_points)
-    y_vals = lambdify(x, func, 'numpy')(x_vals_fft)
+def calculate_fft_derivative(func, x, domain_range, step_size, truncation_size):
+    # Determine the number of points from the step size and domain range
+    num_points = int(np.ceil((domain_range[1] - domain_range[0]) / step_size))
+    x_vals = np.linspace(domain_range[0], domain_range[1], num_points, endpoint=False)
+    y_vals = lambdify(x, func, 'numpy')(x_vals)
 
-    # FFT and spectral derivative
+    # Perform the FFT
     fhat = fft(y_vals)
-    kappa = (2 * np.pi / (domain_range[1] - domain_range[0])) * np.arange(-num_points/2, num_points/2)
-    kappa = np.fft.fftshift(kappa)
-    dfhat = kappa * fhat * (1j)
-    df_vals = np.real(ifft(dfhat))
 
-    return x_vals_fft.tolist(), df_vals.tolist()
+    # Calculate the angular frequencies for differentiation
+    omega = 2 * np.pi * fftfreq(num_points, step_size)
+
+    # Multiply by i*omega to get the derivative in the frequency domain
+    derivative_fhat = 1j * omega * fhat
+
+    # Zero out high-frequency components beyond the truncation size
+    if truncation_size < num_points // 2:
+        derivative_fhat[truncation_size:-truncation_size] = 0
+
+    # Compute the inverse FFT of the modified signal to get the derivative in the time domain
+    df_vals = ifft(derivative_fhat)
+
+    return x_vals.tolist(), np.real(df_vals).tolist()
 
 def calculate_central_difference_derivative(func, x, domain_range, step_size):
     numerical_func = lambdify(x, func, 'numpy')
@@ -61,7 +71,7 @@ def calculate():
 
         # Calculate both derivatives
         x_vals_true, true_derivative = calculate_true_derivative(func, x, domain_range, step_size)
-        x_vals_fft, fft_derivative = calculate_fft_derivative(func, x, domain_range, truncation_size)
+        x_vals_fft, fft_derivative = calculate_fft_derivative(func, x, domain_range, step_size, truncation_size)
         x_vals_cd, cd_derivative = calculate_central_difference_derivative(func, x, domain_range, step_size)
 
         response_data = {
